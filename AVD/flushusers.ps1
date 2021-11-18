@@ -8,7 +8,7 @@
 
 try
 {
-    Connect-AzAccount -Identity
+    $AzureContext = (Connect-AzAccount -Identity).Context
 }
 catch {
 
@@ -16,12 +16,19 @@ catch {
     throw $_.Exception
 }
 
-$ExistingHostPool = Get-AzResource | Where-Object ResourceType -eq Microsoft.DesktopVirtualization/hostpools
+Write-Output "-Context-"
+$AzureContext
+
+$ExistingHostPools = Get-AzResource | Where-Object ResourceType -eq Microsoft.DesktopVirtualization/hostpools
+Write-Output "-Host Pools-"
+$ExistingHostPools
  
-if (($ExistingHostPool).count -gt "0") {
+if (($ExistingHostPools).count -gt "0") {
 # Log off connected Users
-    foreach($Hostpool in $ExistingHostPool){
+    foreach($Hostpool in $ExistingHostPools){
         $WVDUserSessions = Get-AzWvdUserSession -HostPoolName $Hostpool.Name -ResourceGroupName $Hostpool.ResourceGroupName
+        Write-Output "-Sessions-"
+        $WVDUserSessions
         $NumberofWVDSessions = ($WVDUserSessions).count
         if ($NumberofWVDSessions -gt "0") {
             try {

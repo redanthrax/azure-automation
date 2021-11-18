@@ -56,13 +56,18 @@ resource job 'Microsoft.Automation/automationAccounts/jobSchedules@2020-01-13-pr
   }
 }
 
-param roleDefinitionId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 param roleAssignmentName string = newGuid()
 
-resource role 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
+var role = {
+  Owner: '/subscriptions/${subscription().subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
+  Contributor: '/subscriptions/${subscription().subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c'
+  Reader: '/subscriptions/${subscription().subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7'
+}
+
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
   name: roleAssignmentName
   properties: {
-    roleDefinitionId: tenantResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
+    roleDefinitionId: role['Contributor']
     principalId: automationAccount.identity.principalId
   }
 }
