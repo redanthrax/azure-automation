@@ -1,0 +1,5 @@
+az login
+
+az account set --subscription "Microsoft Azure Sponsorship"
+
+az deployment group create --resource-group Allixo-ENG-TESTAUTO --template-file main.bicep
