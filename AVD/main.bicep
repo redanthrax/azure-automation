@@ -25,10 +25,10 @@ resource runbook 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' =
   properties: {
     runbookType: 'PowerShell'
     publishContentLink: {
-      uri: 'github i guess'
+      uri: 'https://raw.githubusercontent.com/redanthrax/azureautomate/master/AVD/flushusers.ps1'
       contentHash: {
         algorithm: 'SHA256'
-        value: ''
+        value: 'F2F629025A145CFAAF556038A51DA9AF5AF991C5301850C41CB726A493A8D4F0'
       }
     }
   }
