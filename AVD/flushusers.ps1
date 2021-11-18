@@ -6,18 +6,10 @@
         AUTHOR: red
 #>
 
-$connectionName = "AzureRunAsConnection"
 try
 {
-    # Get the connection "AzureRunAsConnection "
-    $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName         
-
     "Logging in to Azure..."
-    Connect-AzAccount `
-        -ServicePrincipal `
-        -TenantId $servicePrincipalConnection.TenantId `
-        -ApplicationId $servicePrincipalConnection.ApplicationId `
-        -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint 
+    Connect-AzAccount -Identity
 }
 catch {
     if (!$servicePrincipalConnection)
