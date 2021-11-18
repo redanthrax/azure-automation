@@ -1,5 +1,7 @@
 param baseTime string = '${split(utcNow('u'), ' ')[0]} 07:00:00Z'
 //11PM PST
+var scheduleTime = dateTimeAdd(baseTime, 'P1D')
+param jobGuid string = newGuid()
 
 resource automationAccount 'Microsoft.Automation/automationAccounts@2021-06-22' = {
   name: 'automation-wvd'
@@ -18,9 +20,6 @@ resource runbook 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' =
   name: 'runbook-wvd'
   location: resourceGroup().location
   parent: automationAccount
-  dependsOn: [
-    automationAccount
-  ]
   properties: {
     runbookType: 'PowerShell'
     publishContentLink: {
@@ -33,14 +32,9 @@ resource runbook 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' =
   }
 }
 
-var scheduleTime = dateTimeAdd(baseTime, 'P1D')
-
 resource schedule 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
   name: 'schedule-wvd'
   parent: automationAccount
-  dependsOn: [
-    automationAccount
-  ]
   properties: {
     frequency: 'Day'
     startTime: scheduleTime
@@ -50,7 +44,7 @@ resource schedule 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-
 }
 
 resource job 'Microsoft.Automation/automationAccounts/jobSchedules@2020-01-13-preview' = {
-  name: guid('job-wvd')
+  name: guid('job-wvd-${uniqueString(jobGuid)}')
   parent: automationAccount
   properties: {
     runbook: {
@@ -59,5 +53,16 @@ resource job 'Microsoft.Automation/automationAccounts/jobSchedules@2020-01-13-pr
     schedule: {
       name: schedule.name
     }
+  }
+}
+
+param roleDefinitionId string = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+param roleAssignmentName string = newGuid()
+
+resource role 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
+  name: roleAssignmentName
+  properties: {
+    roleDefinitionId: tenantResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
+    principalId: automationAccount.identity.principalId
   }
 }
