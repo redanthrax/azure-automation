@@ -1,9 +1,8 @@
-param guidValue string = newGuid()
 param baseTime string = '${split(utcNow('u'), ' ')[0]} 07:00:00Z'
 //11PM PST
 
 resource automationAccount 'Microsoft.Automation/automationAccounts@2021-06-22' = {
-  name: 'automation-${uniqueString(guidValue)}'
+  name: 'automation-wvd'
   location: resourceGroup().location
   identity: {
     type: 'SystemAssigned'
@@ -16,7 +15,7 @@ resource automationAccount 'Microsoft.Automation/automationAccounts@2021-06-22' 
 }
 
 resource runbook 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' = {
-  name: 'runbook-${uniqueString(guidValue)}'
+  name: 'runbook-wvd'
   location: resourceGroup().location
   parent: automationAccount
   dependsOn: [
@@ -37,7 +36,7 @@ resource runbook 'Microsoft.Automation/automationAccounts/runbooks@2019-06-01' =
 var scheduleTime = dateTimeAdd(baseTime, 'P1D')
 
 resource schedule 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-preview' = {
-  name: 'schedule-${uniqueString(guidValue)}'
+  name: 'schedule-wvd'
   parent: automationAccount
   dependsOn: [
     automationAccount
@@ -51,13 +50,8 @@ resource schedule 'Microsoft.Automation/automationAccounts/schedules@2020-01-13-
 }
 
 resource job 'Microsoft.Automation/automationAccounts/jobSchedules@2020-01-13-preview' = {
-  name: 'job-${uniqueString(guidValue)}'
+  name: guid('job-wvd')
   parent: automationAccount
-  dependsOn: [
-    automationAccount
-    runbook
-    schedule
-  ]
   properties: {
     runbook: {
       name: runbook.name
