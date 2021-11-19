@@ -5,20 +5,17 @@
     "_generator": {
       "name": "bicep",
       "version": "0.4.1008.15138",
-      "templateHash": "9850618066999391767"
+      "templateHash": "6680861769761618967"
     }
   },
   "parameters": {
     "resourceGroupName": {
       "type": "string"
-    },
-    "roleAssignmentName": {
-      "type": "string",
-      "defaultValue": "[newGuid()]"
     }
   },
   "functions": [],
   "variables": {
+    "roleAssignmentName": "[guid(parameters('resourceGroupName'))]",
     "role": {
       "Owner": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635', subscription().subscriptionId)]",
       "Contributor": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c', subscription().subscriptionId)]",
@@ -29,7 +26,7 @@
     {
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2020-08-01-preview",
-      "name": "[parameters('roleAssignmentName')]",
+      "name": "[variables('roleAssignmentName')]",
       "properties": {
         "roleDefinitionId": "[variables('role').Contributor]",
         "principalId": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'automationAccount'), '2020-06-01').outputs.automationAccountPid.value]"
