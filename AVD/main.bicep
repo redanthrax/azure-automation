@@ -1,4 +1,6 @@
 targetScope = 'subscription'
+
+@description('The resource group must match the location specified.')
 param resourceGroupName string
 
 module automationAccount 'automationAccount.bicep' = {

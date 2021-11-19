@@ -5,12 +5,15 @@
     "_generator": {
       "name": "bicep",
       "version": "0.4.1008.15138",
-      "templateHash": "6680861769761618967"
+      "templateHash": "13855376221754217064"
     }
   },
   "parameters": {
     "resourceGroupName": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "The resource group must match the location specified."
+      }
     }
   },
   "functions": [],
