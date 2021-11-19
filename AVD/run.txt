@@ -1,5 +1,6 @@
 az login
 
+//for multiple subscriptions
 az account set --subscription "Microsoft Azure Sponsorship"
 
-az deployment group create --resource-group ENG-TESTAUTO --template-file main.bicep
+az deployment sub create --location westus2 --template-file main.bicep
