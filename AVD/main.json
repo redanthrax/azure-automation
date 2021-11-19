@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.4.1008.15138",
-      "templateHash": "13855376221754217064"
+      "templateHash": "18402274152251909375"
     }
   },
   "parameters": {
@@ -18,7 +18,7 @@
   },
   "functions": [],
   "variables": {
-    "roleAssignmentName": "[guid(parameters('resourceGroupName'))]",
+    "roleAssignmentName": "[guid(uniqueString(parameters('resourceGroupName')))]",
     "role": {
       "Owner": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635', subscription().subscriptionId)]",
       "Contributor": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c', subscription().subscriptionId)]",

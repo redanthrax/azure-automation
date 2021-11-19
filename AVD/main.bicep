@@ -8,7 +8,7 @@ module automationAccount 'automationAccount.bicep' = {
   scope: resourceGroup(resourceGroupName)
 }
 
-var roleAssignmentName = guid(resourceGroupName)
+var roleAssignmentName = guid(uniqueString(resourceGroupName))
 
 var role = {
   Owner: '/subscriptions/${subscription().subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
