@@ -1,6 +1,0 @@
-az login
-
-//for multiple subscriptions
-az account set --subscription "Microsoft Azure Sponsorship"
-
-az deployment sub create --location westus2 --template-file main.bicep

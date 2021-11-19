@@ -1,0 +1,152 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1008.15138",
+      "templateHash": "9850618066999391767"
+    }
+  },
+  "parameters": {
+    "resourceGroupName": {
+      "type": "string"
+    },
+    "roleAssignmentName": {
+      "type": "string",
+      "defaultValue": "[newGuid()]"
+    }
+  },
+  "functions": [],
+  "variables": {
+    "role": {
+      "Owner": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635', subscription().subscriptionId)]",
+      "Contributor": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c', subscription().subscriptionId)]",
+      "Reader": "[format('/subscriptions/{0}/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7', subscription().subscriptionId)]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[parameters('roleAssignmentName')]",
+      "properties": {
+        "roleDefinitionId": "[variables('role').Contributor]",
+        "principalId": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'automationAccount'), '2020-06-01').outputs.automationAccountPid.value]"
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('resourceGroupName')), 'Microsoft.Resources/deployments', 'automationAccount')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-06-01",
+      "name": "automationAccount",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1008.15138",
+              "templateHash": "3612210599981919303"
+            }
+          },
+          "parameters": {
+            "baseTime": {
+              "type": "string",
+              "defaultValue": "[format('{0} 07:00:00Z', split(utcNow('u'), ' ')[0])]"
+            },
+            "jobGuid": {
+              "type": "string",
+              "defaultValue": "[newGuid()]"
+            }
+          },
+          "functions": [],
+          "variables": {
+            "scheduleTime": "[dateTimeAdd(parameters('baseTime'), 'P1D')]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Automation/automationAccounts",
+              "apiVersion": "2021-06-22",
+              "name": "automation-wvd",
+              "location": "[resourceGroup().location]",
+              "identity": {
+                "type": "SystemAssigned"
+              },
+              "properties": {
+                "sku": {
+                  "name": "Basic"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/runbooks",
+              "apiVersion": "2019-06-01",
+              "name": "[format('{0}/{1}', 'automation-wvd', 'runbook-wvd')]",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "runbookType": "PowerShell",
+                "publishContentLink": {
+                  "uri": "https://raw.githubusercontent.com/redanthrax/azureautomate/master/AVD/flushusers.ps1",
+                  "contentHash": {
+                    "algorithm": "SHA256",
+                    "value": "F2F629025A145CFAAF556038A51DA9AF5AF991C5301850C41CB726A493A8D4F0"
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', 'automation-wvd')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/schedules",
+              "apiVersion": "2020-01-13-preview",
+              "name": "[format('{0}/{1}', 'automation-wvd', 'schedule-wvd')]",
+              "properties": {
+                "frequency": "Day",
+                "startTime": "[variables('scheduleTime')]",
+                "timeZone": "Pacific Standard Time",
+                "interval": 1
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', 'automation-wvd')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+              "apiVersion": "2020-01-13-preview",
+              "name": "[format('{0}/{1}', 'automation-wvd', guid(format('job-wvd-{0}', uniqueString(parameters('jobGuid')))))]",
+              "properties": {
+                "runbook": {
+                  "name": "runbook-wvd"
+                },
+                "schedule": {
+                  "name": "schedule-wvd"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', 'automation-wvd')]",
+                "[resourceId('Microsoft.Automation/automationAccounts/runbooks', 'automation-wvd', 'runbook-wvd')]",
+                "[resourceId('Microsoft.Automation/automationAccounts/schedules', 'automation-wvd', 'schedule-wvd')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "automationAccountPid": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Automation/automationAccounts', 'automation-wvd'), '2021-06-22', 'full').identity.principalId]"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
