@@ -1,5 +1,7 @@
 # Scheduled Virtual Desktop Logoff
 
+Prerequisites: Create a resource group for the resources to live in before deployment.
+
 **Deploy from Terminal**
 
 ```
