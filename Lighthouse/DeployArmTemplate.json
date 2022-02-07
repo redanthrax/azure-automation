@@ -30,7 +30,7 @@
    },
    "defaultValue": [
     {
-     "principalId": "db775de8-6760-48d2-a2cd-d89b1c030a94",
+     "principalId": "efe5d2d1-55fb-42a9-9cc0-560c6e9f67ee",
      "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
      "principalIdDisplayName": "Customer Azure Management"
     }
