@@ -64,3 +64,5 @@ resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-09-05' = {
     applicationGroup
   ]
 }
+
+output appGroupName string = appGroupName
