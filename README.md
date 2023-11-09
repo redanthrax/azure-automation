@@ -12,6 +12,5 @@ This will deploy a Windows 11 Multisession SSO environment complete with Session
 ### Manual Deployment
 
 ```
-az group create --name VS-AVD --location westus2
-az deployment group create --resource-group 'Client-AVD' --template-file AzureVirtualDesktop\main.bicep
+az deployment sub create --location 'westus2' --template-file AzureVirtualDesktop\main.bicep
 ```
