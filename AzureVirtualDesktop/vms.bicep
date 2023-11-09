@@ -165,5 +165,3 @@ resource dscextension 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' 
     }
   }
 }
-
-
