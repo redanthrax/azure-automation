@@ -163,7 +163,6 @@ module sessionHosts 'session-hosts.bicep' = {
     existingVnetResourceGroupName: createNewVnet ? resourceGroupName : existingVnetResourceGroupName
     existingVnetName: existingVnetName
     existingSubnetName: existingSubnetName
-    // hostPoolName: hostPoolName  // Temporarily disabled
     storageAccountName: storageAccountName
     fileShareName: fileShareName
   }

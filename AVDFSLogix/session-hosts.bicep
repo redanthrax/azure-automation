@@ -28,10 +28,6 @@ param existingVnetName string
 @description('Existing subnet name for session hosts')
 param existingSubnetName string
 
-// Temporarily disabled for troubleshooting
-// @description('Host pool name for registration')
-// param hostPoolName string
-
 @description('Storage account name for FSLogix')
 param storageAccountName string
 
@@ -49,6 +45,9 @@ param imageSku string = 'win11-23h2-avd'
 
 @description('VM image version')
 param imageVersion string = 'latest'
+
+// Note: AVD Host Registration will be done via separate script after deployment
+// This avoids complex token expression issues during deployment
 
 // Get subnet reference
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
@@ -149,29 +148,8 @@ resource aadJoinExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-
   }
 }]
 
-// AVD Host Registration Extension using Azure CLI (DISABLED for troubleshooting)
-/*
-resource avdHostExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' = [for i in range(0, numberOfVMs): {
-  parent: virtualMachines[i]
-  name: 'AVDHostRegistration'
-  location: location
-  properties: {
-    publisher: 'Microsoft.Compute'
-    type: 'CustomScriptExtension'
-    typeHandlerVersion: '1.10'
-    autoUpgradeMinorVersion: true
-    settings: {
-      fileUris: []
-    }
-    protectedSettings: {
-      commandToExecute: 'powershell -ExecutionPolicy Unrestricted -Command "# Install Azure CLI; $ProgressPreference = \'SilentlyContinue\'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList \'/I AzureCLI.msi /quiet\'; $env:Path = [System.Environment]::GetEnvironmentVariable(\'Path\',\'Machine\') + \';\' + [System.Environment]::GetEnvironmentVariable(\'Path\',\'User\'); # Download and install AVD Agent; $avdAgentUrl = \'https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RWrmXv\'; Invoke-WebRequest -Uri $avdAgentUrl -OutFile \'AVDAgent.msi\'; Start-Process msiexec.exe -Wait -ArgumentList \'/i AVDAgent.msi /quiet REGISTRATIONTOKEN=${hostPool.listRegistrationTokens().value[0].token}\'; # Download and install AVD Boot Loader; $bootLoaderUrl = \'https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RWrxrH\'; Invoke-WebRequest -Uri $bootLoaderUrl -OutFile \'AVDBootLoader.msi\'; Start-Process msiexec.exe -Wait -ArgumentList \'/i AVDBootLoader.msi /quiet\'"'
-    }
-  }
-  dependsOn: [
-    aadJoinExtension[i]
-  ]
-}]
-*/
+// Note: AVD Host Registration will be done via separate script after deployment
+// This ensures VMs are properly joined to Azure AD first
 
 // FSLogix Configuration Extension using script-based approach
 resource fslogixExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' = [for i in range(0, numberOfVMs): {

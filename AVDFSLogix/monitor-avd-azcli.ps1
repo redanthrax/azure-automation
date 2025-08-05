@@ -71,12 +71,16 @@ catch {
 # 2. Session Hosts Status
 Write-Host "`n2. Session Hosts Status" -ForegroundColor Blue
 try {
-    $sessionHosts = az desktopvirtualization sessionhost list --host-pool-name $HostPoolName --resource-group $ResourceGroupName --output json | ConvertFrom-Json
+    # Get subscription ID for REST API call
+    $subscriptionId = az account show --query id --output tsv
+    $sessionHostsUri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$ResourceGroupName/providers/Microsoft.DesktopVirtualization/hostPools/$HostPoolName/sessionHosts?api-version=2023-09-05"
+    $sessionHostsResult = az rest --method GET --uri $sessionHostsUri --output json | ConvertFrom-Json
+    $sessionHosts = $sessionHostsResult.value
     
     if ($sessionHosts.Count -eq 0) {
-        Show-Status "Session Hosts" "Critical" "No session hosts found"
+        Show-Status "Session Hosts" "Warning" "No session hosts registered (VMs may not be domain-joined or AVD agent not installed)"
     } else {
-        $healthyHosts = ($sessionHosts | Where-Object { $_.status -eq "Available" }).Count
+        $healthyHosts = ($sessionHosts | Where-Object { $_.properties.status -eq "Available" }).Count
         $totalHosts = $sessionHosts.Count
         
         if ($healthyHosts -eq $totalHosts) {
@@ -89,13 +93,14 @@ try {
         
         # Show individual host status
         foreach ($sessionHost in $sessionHosts) {
-            $hostStatus = switch ($sessionHost.status) {
+            $sessionHostStatus = switch ($sessionHost.properties.status) {
                 "Available" { "Healthy" }
                 "Unavailable" { "Critical" }
                 "Shutdown" { "Warning" }
                 default { "Warning" }
             }
-            Show-Status "  $($sessionHost.name)" $hostStatus "Status: $($sessionHost.status), Sessions: $($sessionHost.sessions)"
+            $hostName = $sessionHost.name.Split('/')[-1]  # Extract host name from full resource name
+            Show-Status "  $hostName" $sessionHostStatus "Status: $($sessionHost.properties.status), Sessions: $($sessionHost.properties.sessions)"
         }
     }
 }
@@ -106,7 +111,11 @@ catch {
 # 3. Active Sessions
 Write-Host "`n3. Active Sessions" -ForegroundColor Blue
 try {
-    $sessions = az desktopvirtualization session list --host-pool-name $HostPoolName --resource-group $ResourceGroupName --output json | ConvertFrom-Json
+    # Get subscription ID for REST API call
+    $subscriptionId = az account show --query id --output tsv
+    $sessionsUri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$ResourceGroupName/providers/Microsoft.DesktopVirtualization/hostPools/$HostPoolName/userSessions?api-version=2023-09-05"
+    $sessionsResult = az rest --method GET --uri $sessionsUri --output json | ConvertFrom-Json
+    $sessions = $sessionsResult.value
     
     if ($sessions.Count -eq 0) {
         Show-Status "Active Sessions" "Healthy" "No active sessions"
@@ -115,7 +124,8 @@ try {
         
         # Show session details
         foreach ($session in $sessions) {
-            Write-Host "   User: $($session.userPrincipalName), Host: $($session.sessionHostName), State: $($session.sessionState)" -ForegroundColor Gray
+            $sessionName = $session.name.Split('/')[-1]  # Extract session name from full resource name
+            Write-Host "   User: $($session.properties.userPrincipalName), Session: $sessionName, State: $($session.properties.sessionState)" -ForegroundColor Gray
         }
     }
 }

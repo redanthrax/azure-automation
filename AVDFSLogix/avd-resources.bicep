@@ -39,7 +39,7 @@ param maxSessionLimit int = 20  // Increased from 10 to 20 for better user densi
 param customRdpProperty string = 'targetisaadjoined:i:1;drivestoredirect:s:*;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:1;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;redirectwebauthn:i:1;use multimon:i:1;enablerdsaadauth:i:1'
 
 // AVD Host Pool
-resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-09-05' = {
+resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2024-04-03' = {
   name: hostPoolName
   location: location
   properties: {
@@ -56,7 +56,7 @@ resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-09-05' = {
 }
 
 // Application Group
-resource appGroup 'Microsoft.DesktopVirtualization/applicationGroups@2023-09-05' = {
+resource appGroup 'Microsoft.DesktopVirtualization/applicationGroups@2024-04-03' = {
   name: appGroupName
   location: location
   properties: {
@@ -67,7 +67,7 @@ resource appGroup 'Microsoft.DesktopVirtualization/applicationGroups@2023-09-05'
 }
 
 // Workspace
-resource workspace 'Microsoft.DesktopVirtualization/workspaces@2023-09-05' = {
+resource workspace 'Microsoft.DesktopVirtualization/workspaces@2024-04-03' = {
   name: workspaceName
   location: location
   properties: {

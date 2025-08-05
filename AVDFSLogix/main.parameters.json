@@ -30,7 +30,7 @@
       "value": "fslogix"
     },
     "vmNamePrefix": {
-      "value": "avdtest"
+      "value": "avdvm7305"
     },
     "vmSize": {
       "value": "Standard_D4s_v3"
