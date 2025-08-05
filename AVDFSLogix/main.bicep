@@ -36,8 +36,9 @@ param storageAccountName string
 @description('Name of the file share for FSLogix profiles')
 param fileShareName string = 'fslogix'
 
-@description('Name of the recovery services vault for backup')
-param recoveryVaultName string
+// Temporarily disabled for troubleshooting
+// @description('Name of the recovery services vault for backup')
+// param recoveryVaultName string
 
 @description('VM name prefix for session hosts')
 param vmNamePrefix string = 'avd'
@@ -62,14 +63,23 @@ param adminUsername string
 @secure()
 param adminPassword string
 
-@description('Existing virtual network resource group name')
-param existingVnetResourceGroupName string
+@description('Create new virtual network or use existing one')
+param createNewVnet bool = true
 
-@description('Existing virtual network name')
-param existingVnetName string
+@description('Virtual network address prefix (only used when creating new vnet)')
+param vnetAddressPrefix string = '10.0.0.0/16'
 
-@description('Existing subnet name for session hosts')
-param existingSubnetName string
+@description('Subnet address prefix (only used when creating new vnet)')
+param subnetAddressPrefix string = '10.0.1.0/24'
+
+@description('Existing virtual network resource group name (only used when createNewVnet is false)')
+param existingVnetResourceGroupName string = resourceGroupName
+
+@description('Existing virtual network name (only used when createNewVnet is false)')
+param existingVnetName string = 'vnet-avd'
+
+@description('Existing subnet name for session hosts (only used when createNewVnet is false)')
+param existingSubnetName string = 'subnet-avd'
 
 @description('Enable MSIX App Attach infrastructure')
 param enableMsixAppAttach bool = false
@@ -83,6 +93,19 @@ resource rg 'Microsoft.Resources/resourceGroups@2023-07-01' = {
   location: location
 }
 
+// Deploy virtual network and subnet (conditionally)
+module network 'network.bicep' = if (createNewVnet) {
+  name: 'network-deployment'
+  scope: rg
+  params: {
+    location: location
+    vnetName: existingVnetName
+    subnetName: existingSubnetName
+    vnetAddressPrefix: vnetAddressPrefix
+    subnetAddressPrefix: subnetAddressPrefix
+  }
+}
+
 // Deploy storage account and file share for FSLogix
 module storage 'storage.bicep' = {
   name: 'storage-deployment'
@@ -94,7 +117,8 @@ module storage 'storage.bicep' = {
   }
 }
 
-// Deploy recovery services vault and backup
+// Deploy recovery services vault and backup (disabled for troubleshooting)
+/*
 module backup 'backup.bicep' = {
   name: 'backup-deployment'
   scope: rg
@@ -109,6 +133,7 @@ module backup 'backup.bicep' = {
     storage
   ]
 }
+*/
 
 // Deploy AVD resources
 module avdResources 'avd-resources.bicep' = {
@@ -135,14 +160,18 @@ module sessionHosts 'session-hosts.bicep' = {
     numberOfVMs: numberOfSessionHosts
     adminUsername: adminUsername
     adminPassword: adminPassword
-    existingVnetResourceGroupName: existingVnetResourceGroupName
+    existingVnetResourceGroupName: createNewVnet ? resourceGroupName : existingVnetResourceGroupName
     existingVnetName: existingVnetName
     existingSubnetName: existingSubnetName
-    hostPoolName: hostPoolName
+    // hostPoolName: hostPoolName  // Temporarily disabled
     storageAccountName: storageAccountName
     fileShareName: fileShareName
   }
-  dependsOn: [
+  dependsOn: createNewVnet ? [
+    avdResources
+    storage
+    network
+  ] : [
     avdResources
     storage
   ]
@@ -168,5 +197,5 @@ output appGroupId string = avdResources.outputs.appGroupId
 output workspaceId string = avdResources.outputs.workspaceId
 output storageAccountId string = storage.outputs.storageAccountId
 output fileShareUrl string = storage.outputs.fileShareUrl
-output recoveryVaultId string = backup.outputs.recoveryVaultId
+// output recoveryVaultId string = backup.outputs.recoveryVaultId  // Temporarily disabled
 output msixEnabled bool = enableMsixAppAttach

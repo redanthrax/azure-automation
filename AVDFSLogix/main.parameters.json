@@ -3,43 +3,40 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceGroupName": {
-      "value": "rg-avd-fslogix-prod"
+      "value": "AVD-TEST"
     },
     "location": {
-      "value": "eastus2"
+      "value": "westus2"
     },
     "hostPoolName": {
-      "value": "hp-avd-fslogix-prod"
+      "value": "hp-avd-test"
     },
     "hostPoolFriendlyName": {
-      "value": "AVD with FSLogix Production Pool"
+      "value": "AVD Test Pool"
     },
     "appGroupName": {
-      "value": "ag-avd-fslogix-prod"
+      "value": "ag-avd-test"
     },
     "appGroupFriendlyName": {
-      "value": "AVD FSLogix Desktop Applications"
+      "value": "AVD Test Desktop Applications"
     },
     "workspaceName": {
-      "value": "ws-avd-fslogix-prod"
+      "value": "ws-avd-test"
     },
     "storageAccountName": {
-      "value": "stavdfslogixprod001"
+      "value": "stavdtest001"
     },
     "fileShareName": {
       "value": "fslogix"
     },
-    "recoveryVaultName": {
-      "value": "rsv-avd-fslogix-prod"
-    },
     "vmNamePrefix": {
-      "value": "avd"
+      "value": "avdtest"
     },
     "vmSize": {
-      "value": "Standard_D2s_v3"
+      "value": "Standard_D4s_v3"
     },
     "numberOfSessionHosts": {
-      "value": 2
+      "value": 1
     },
     "adminUsername": {
       "value": "avdadmin"
@@ -47,11 +44,20 @@
     "adminPassword": {
       "value": "YourSecurePassword123!"
     },
+    "createNewVnet": {
+      "value": true
+    },
+    "vnetAddressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "subnetAddressPrefix": {
+      "value": "10.0.1.0/24"
+    },
     "existingVnetResourceGroupName": {
-      "value": "rg-network-prod"
+      "value": "AVD-TEST"
     },
     "existingVnetName": {
-      "value": "vnet-prod"
+      "value": "vnet-avd-test"
     },
     "existingSubnetName": {
       "value": "subnet-avd"

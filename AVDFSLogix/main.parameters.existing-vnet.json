@@ -3,43 +3,40 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceGroupName": {
-      "value": "rg-avd-fslogix-scale"
+      "value": "AVD-PROD"
     },
     "location": {
       "value": "eastus2"
     },
     "hostPoolName": {
-      "value": "hp-avd-fslogix-scale"
+      "value": "hp-avd-prod"
     },
     "hostPoolFriendlyName": {
-      "value": "AVD with FSLogix - Scalable Pool"
+      "value": "AVD Production Pool"
     },
     "appGroupName": {
-      "value": "ag-avd-fslogix-scale"
+      "value": "ag-avd-prod"
     },
     "appGroupFriendlyName": {
-      "value": "AVD FSLogix Scalable Desktop"
+      "value": "AVD Production Desktop Applications"
     },
     "workspaceName": {
-      "value": "ws-avd-fslogix-scale"
+      "value": "ws-avd-prod"
     },
     "storageAccountName": {
-      "value": "stavdfslogixscale001"
+      "value": "stavdprod002test"
     },
     "fileShareName": {
       "value": "fslogix"
     },
-    "recoveryVaultName": {
-      "value": "rsv-avd-fslogix-scale"
-    },
     "vmNamePrefix": {
-      "value": "avd"
+      "value": "avdprod"
     },
     "vmSize": {
       "value": "Standard_D4s_v3"
     },
     "numberOfSessionHosts": {
-      "value": 10
+      "value": 2
     },
     "adminUsername": {
       "value": "avdadmin"
@@ -47,14 +44,17 @@
     "adminPassword": {
       "value": "YourSecurePassword123!"
     },
+    "createNewVnet": {
+      "value": false
+    },
     "existingVnetResourceGroupName": {
-      "value": "rg-network-prod"
+      "value": "NETWORK-RG"
     },
     "existingVnetName": {
-      "value": "vnet-prod"
+      "value": "corp-vnet"
     },
     "existingSubnetName": {
-      "value": "subnet-avd"
+      "value": "avd-subnet"
     }
   }
 }

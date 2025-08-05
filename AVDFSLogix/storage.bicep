@@ -9,10 +9,12 @@ param fileShareName string
 
 @description('Storage account SKU')
 @allowed([
+  'Standard_LRS'
+  'Standard_ZRS'
   'Premium_LRS'
   'Premium_ZRS'
 ])
-param storageAccountSku string = 'Premium_LRS'
+param storageAccountSku string = 'Standard_LRS'
 
 @description('File share quota in GB')
 @minValue(100)
@@ -23,12 +25,12 @@ param fileShareQuota int = 5120  // Increased from 1024 to 5120 (5TB) for more u
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: storageAccountName
   location: location
-  kind: 'FileStorage'
+  kind: 'StorageV2'
   sku: {
     name: storageAccountSku
   }
   properties: {
-    accessTier: 'Premium'
+    accessTier: 'Hot'
     azureFilesIdentityBasedAuthentication: {
       directoryServiceOptions: 'AADKERB'
     }
@@ -66,7 +68,7 @@ resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-0
   properties: {
     shareQuota: fileShareQuota
     enabledProtocols: 'SMB'
-    accessTier: 'Premium'
+    accessTier: 'TransactionOptimized'
   }
 }
 

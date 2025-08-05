@@ -28,8 +28,9 @@ param existingVnetName string
 @description('Existing subnet name for session hosts')
 param existingSubnetName string
 
-@description('Host pool name for registration')
-param hostPoolName string
+// Temporarily disabled for troubleshooting
+// @description('Host pool name for registration')
+// param hostPoolName string
 
 @description('Storage account name for FSLogix')
 param storageAccountName string
@@ -53,11 +54,6 @@ param imageVersion string = 'latest'
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
   name: '${existingVnetName}/${existingSubnetName}'
   scope: resourceGroup(existingVnetResourceGroupName)
-}
-
-// Get host pool reference for token
-resource hostPool 'Microsoft.DesktopVirtualization/hostPools@2023-09-05' existing = {
-  name: hostPoolName
 }
 
 // Create Network Interfaces
@@ -153,35 +149,31 @@ resource aadJoinExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-
   }
 }]
 
-// AVD Host Registration Extension
+// AVD Host Registration Extension using Azure CLI (DISABLED for troubleshooting)
+/*
 resource avdHostExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' = [for i in range(0, numberOfVMs): {
   parent: virtualMachines[i]
-  name: 'Microsoft.PowerShell.DSC'
+  name: 'AVDHostRegistration'
   location: location
   properties: {
-    publisher: 'Microsoft.Powershell'
-    type: 'DSC'
-    typeHandlerVersion: '2.77'
+    publisher: 'Microsoft.Compute'
+    type: 'CustomScriptExtension'
+    typeHandlerVersion: '1.10'
     autoUpgradeMinorVersion: true
     settings: {
-      modulesUrl: 'https://wvdportalstorageblob.blob.${environment().suffixes.storage}/galleryartifacts/Configuration_09-08-2022.zip'
-      configurationFunction: 'Configuration.ps1\\AddSessionHost'
-      properties: {
-        hostPoolName: hostPoolName
-        registrationInfoToken: hostPool.listRegistrationTokens().value[0].token
-        aadJoin: true
-        UseAgentDownloadEndpoint: true
-        aadJoinPreview: false
-        mdmId: '0000000a-0000-0000-c000-000000000000'
-      }
+      fileUris: []
+    }
+    protectedSettings: {
+      commandToExecute: 'powershell -ExecutionPolicy Unrestricted -Command "# Install Azure CLI; $ProgressPreference = \'SilentlyContinue\'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList \'/I AzureCLI.msi /quiet\'; $env:Path = [System.Environment]::GetEnvironmentVariable(\'Path\',\'Machine\') + \';\' + [System.Environment]::GetEnvironmentVariable(\'Path\',\'User\'); # Download and install AVD Agent; $avdAgentUrl = \'https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RWrmXv\'; Invoke-WebRequest -Uri $avdAgentUrl -OutFile \'AVDAgent.msi\'; Start-Process msiexec.exe -Wait -ArgumentList \'/i AVDAgent.msi /quiet REGISTRATIONTOKEN=${hostPool.listRegistrationTokens().value[0].token}\'; # Download and install AVD Boot Loader; $bootLoaderUrl = \'https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RWrxrH\'; Invoke-WebRequest -Uri $bootLoaderUrl -OutFile \'AVDBootLoader.msi\'; Start-Process msiexec.exe -Wait -ArgumentList \'/i AVDBootLoader.msi /quiet\'"'
     }
   }
   dependsOn: [
     aadJoinExtension[i]
   ]
 }]
+*/
 
-// FSLogix Configuration Extension
+// FSLogix Configuration Extension using script-based approach
 resource fslogixExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' = [for i in range(0, numberOfVMs): {
   parent: virtualMachines[i]
   name: 'FSLogixConfiguration'
@@ -193,11 +185,13 @@ resource fslogixExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-
     autoUpgradeMinorVersion: true
     settings: {
       fileUris: []
-      commandToExecute: 'powershell -ExecutionPolicy Unrestricted -Command "New-Item -Path HKLM:\\SOFTWARE\\FSLogix -Force; New-Item -Path HKLM:\\SOFTWARE\\FSLogix\\Profiles -Force; Set-ItemProperty -Path HKLM:\\SOFTWARE\\FSLogix\\Profiles -Name Enabled -Value 1 -Type DWord; Set-ItemProperty -Path HKLM:\\SOFTWARE\\FSLogix\\Profiles -Name VHDLocations -Value \\\\${storageAccountName}.file.${environment().suffixes.storage}\\${fileShareName} -Type MultiString; New-Item -Path HKLM:\\SOFTWARE\\FSLogix\\Profiles\\Sessions -Force; Set-ItemProperty -Path HKLM:\\SOFTWARE\\FSLogix\\Profiles\\Sessions -Name VHDLocations -Value \\\\${storageAccountName}.file.${environment().suffixes.storage}\\${fileShareName} -Type MultiString"'
+    }
+    protectedSettings: {
+      commandToExecute: 'powershell -ExecutionPolicy Unrestricted -Command "# Download and install FSLogix; $fslogixUrl = \'https://aka.ms/fslogix_download\'; $tempPath = \'C:\\temp\'; New-Item -ItemType Directory -Path $tempPath -Force; $zipPath = Join-Path $tempPath \'FSLogix.zip\'; try { Invoke-WebRequest -Uri $fslogixUrl -OutFile $zipPath; Expand-Archive -Path $zipPath -DestinationPath $tempPath -Force; $installerPath = Get-ChildItem -Path $tempPath -Recurse -Filter \'FSLogixAppsSetup.exe\' | Select-Object -First 1; if ($installerPath) { Start-Process -FilePath $installerPath.FullName -ArgumentList \'/install /quiet /norestart\' -Wait } } catch { Write-Host \'FSLogix download failed, continuing with registry configuration\' }; # Configure FSLogix registry settings; New-Item -Path \'HKLM:\\SOFTWARE\\FSLogix\' -Force; New-Item -Path \'HKLM:\\SOFTWARE\\FSLogix\\Profiles\' -Force; Set-ItemProperty -Path \'HKLM:\\SOFTWARE\\FSLogix\\Profiles\' -Name \'Enabled\' -Value 1 -Type DWord; Set-ItemProperty -Path \'HKLM:\\SOFTWARE\\FSLogix\\Profiles\' -Name \'VHDLocations\' -Value \'\\\\${storageAccountName}.file.${environment().suffixes.storage}\\${fileShareName}\' -Type MultiString"'
     }
   }
   dependsOn: [
-    avdHostExtension[i]
+    aadJoinExtension[i]
   ]
 }]
 

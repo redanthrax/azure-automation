@@ -57,8 +57,9 @@ resource backupPolicy 'Microsoft.RecoveryServices/vaults/backupPolicies@2023-06-
       schedulePolicyType: 'SimpleSchedulePolicy'
       scheduleRunFrequency: 'Daily'
       scheduleRunTimes: [
-        '02:00'
+        '2023-01-01T02:00:00Z'
       ]
+      scheduleWeeklyFrequency: 0
     }
     timeZone: 'UTC'
   }
