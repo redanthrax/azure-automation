@@ -1,0 +1,51 @@
+# Bicep build artifacts
+*.json.bak
+*.bicep.bak
+
+# Azure deployment artifacts
+.azure/
+deployments/
+
+# IDE files
+.vscode/
+.vs/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+
+# Sensitive parameter files (uncomment if you want to exclude parameters)
+# *.parameters.json
+# *.parameters.*.json

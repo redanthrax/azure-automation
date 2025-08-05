@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceGroupName": {
+      "value": "rg-avd-fslogix-scale"
+    },
+    "location": {
+      "value": "eastus2"
+    },
+    "hostPoolName": {
+      "value": "hp-avd-fslogix-scale"
+    },
+    "hostPoolFriendlyName": {
+      "value": "AVD with FSLogix - Scalable Pool"
+    },
+    "appGroupName": {
+      "value": "ag-avd-fslogix-scale"
+    },
+    "appGroupFriendlyName": {
+      "value": "AVD FSLogix Scalable Desktop"
+    },
+    "workspaceName": {
+      "value": "ws-avd-fslogix-scale"
+    },
+    "storageAccountName": {
+      "value": "stavdfslogixscale001"
+    },
+    "fileShareName": {
+      "value": "fslogix"
+    },
+    "recoveryVaultName": {
+      "value": "rsv-avd-fslogix-scale"
+    },
+    "vmNamePrefix": {
+      "value": "avd"
+    },
+    "vmSize": {
+      "value": "Standard_D4s_v3"
+    },
+    "numberOfSessionHosts": {
+      "value": 10
+    },
+    "adminUsername": {
+      "value": "avdadmin"
+    },
+    "adminPassword": {
+      "value": "YourSecurePassword123!"
+    },
+    "existingVnetResourceGroupName": {
+      "value": "rg-network-prod"
+    },
+    "existingVnetName": {
+      "value": "vnet-prod"
+    },
+    "existingSubnetName": {
+      "value": "subnet-avd"
+    }
+  }
+}
