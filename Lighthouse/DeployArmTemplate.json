@@ -42,6 +42,24 @@
                         "b24988ac-6180-42a0-ab88-20f7382dd24c",
                         "7f951dda-4ed3-4680-a7ca-43fe172d538d"
                     ]
+                },
+                {
+                    "principalId": "97f0e117-6a09-4a3f-8d4f-98e25ec745c1",
+                    "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+                    "principalIdDisplayName": "DevOps Service Principal - Contributor"
+                },
+                {
+                    "principalId": "97f0e117-6a09-4a3f-8d4f-98e25ec745c1",
+                    "roleDefinitionId": "18d7d88d-d35e-4fb5-a5c3-7773c20a72d9",
+                    "principalIdDisplayName": "DevOps Service Principal - User Access Administrator",
+                    "delegatedRoleDefinitionIds": [
+                        "b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ]
+                },
+                {
+                    "principalId": "97f0e117-6a09-4a3f-8d4f-98e25ec745c1",
+                    "roleDefinitionId": "c1eccfd0-8cc7-4b5b-8bf1-25e251be892e",
+                    "principalIdDisplayName": "DevOps Service Principal - Managed Services Delete"
                 }
             ]
         }
