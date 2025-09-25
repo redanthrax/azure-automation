@@ -13,11 +13,15 @@
         "managedByTenantId": {
             "type": "string",
             "defaultValue": "0819678a-52f9-44d6-9ccb-9d3942559a2c"
+        },
+        "utcValue": {
+            "type": "string",
+            "defaultValue": "[utcNow()]"
         }
     },
     "variables": {
-        "mspRegistrationName": "[guid(concat(parameters('mspOfferName'), 'registration', utcNow()))]",
-        "mspAssignmentName": "[guid(concat(parameters('mspOfferName'), 'assignment', utcNow()))]"
+        "mspRegistrationName": "[guid(concat(parameters('mspOfferName'), 'registration', parameters('utcValue')))]",
+        "mspAssignmentName": "[guid(concat(parameters('mspOfferName'), 'assignment', parameters('utcValue')))]"
     },
     "resources": [
         {

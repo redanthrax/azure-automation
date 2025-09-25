@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "principalId1": {
+            "type": "string",
+            "defaultValue": "14a3bc2d-b76e-42ab-8261-0402f7e1236e",
+            "metadata": {
+                "description": "Principal ID for Customer Principal"
+            }
+        },
+        "principalId2": {
+            "type": "string", 
+            "defaultValue": "5020b9dd-1a87-4c68-8723-8267152046f3",
+            "metadata": {
+                "description": "Principal ID for DevOps Service Principal"
+            }
+        }
+    },
+    "variables": {
+        "networkContributorRoleId": "4d97b98b-1d4f-4787-a291-c67834d212e7",
+        "managedIdentityOperatorRoleId": "f1a07417-d97a-45cb-824c-7a7467783830"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "name": "[guid(concat('network-contributor-1', subscription().subscriptionId, parameters('principalId1')))]",
+            "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('networkContributorRoleId'))]",
+                "principalId": "[parameters('principalId1')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments", 
+            "apiVersion": "2022-04-01",
+            "name": "[guid(concat('managed-identity-operator-1', subscription().subscriptionId, parameters('principalId1')))]",
+            "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('managedIdentityOperatorRoleId'))]",
+                "principalId": "[parameters('principalId1')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01", 
+            "name": "[guid(concat('network-contributor-2', subscription().subscriptionId, parameters('principalId2')))]",
+            "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('networkContributorRoleId'))]",
+                "principalId": "[parameters('principalId2')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "name": "[guid(concat('managed-identity-operator-2', subscription().subscriptionId, parameters('principalId2')))]", 
+            "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('managedIdentityOperatorRoleId'))]",
+                "principalId": "[parameters('principalId2')]",
+                "principalType": "ServicePrincipal"
+            }
+        }
+    ],
+    "outputs": {
+        "message": {
+            "type": "string",
+            "value": "Successfully assigned Network Contributor and Managed Identity Operator roles for AKS deployments"
+        }
+    }
+}

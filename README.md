@@ -14,6 +14,11 @@ Deploy the updated ARM template with additional roles required for AKS deploymen
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fredanthrax%2Fazure-automation%2Fmaster%2FUpdateLighthouseRoles.json)
 
+**Alternative: Assign AKS Roles Only**
+If the Lighthouse update fails, use this simpler template to just add the missing AKS roles:
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fredanthrax%2Fazure-automation%2Fmaster%2FAssignAKSRoles.json)
+
 ---
 
 ## When to Use Each Template
@@ -38,6 +43,11 @@ az deployment sub create --location 'westus2' --template-file Lighthouse/DeployA
 **Updated Lighthouse Template (with AKS permissions):**
 ```bash
 az deployment sub create --location 'westus2' --template-file UpdateLighthouseRoles.json
+```
+
+**AKS Roles Only (Alternative):**
+```bash
+az deployment sub create --location 'westus2' --template-file AssignAKSRoles.json
 ```
 
 **Azure Virtual Desktop:**
