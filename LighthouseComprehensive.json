@@ -93,6 +93,22 @@
                         "principalId": "5020b9dd-1a87-4c68-8723-8267152046f3",
                         "roleDefinitionId": "f1a07417-d97a-45cb-824c-7a7467783830",
                         "principalIdDisplayName": "DevOps Service Principal - Managed Identity Operator"
+                    },
+                    {
+                        "principalId": "7aee77f3-f04f-44ce-84fd-51dcb5c03891",
+                        "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+                        "principalIdDisplayName": "ggagnon@allixo.com - Contributor"
+                    },
+                    {
+                        "principalId": "7aee77f3-f04f-44ce-84fd-51dcb5c03891",
+                        "roleDefinitionId": "18d7d88d-d35e-4fb5-a5c3-7773c20a72d9",
+                        "principalIdDisplayName": "ggagnon@allixo.com - User Access Administrator",
+                        "delegatedRoleDefinitionIds": [
+                            "b24988ac-6180-42a0-ab88-20f7382dd24c",
+                            "4d97b98b-1d4f-4787-a291-c67834d212e7",
+                            "f1a07417-d97a-45cb-824c-7a7467783830",
+                            "7f951dda-4ed3-4680-a7ca-43fe172d538d"
+                        ]
                     }
                 ]
             }
