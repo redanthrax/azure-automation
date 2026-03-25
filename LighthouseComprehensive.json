@@ -14,7 +14,7 @@
             "metadata": {
                 "description": "Name of the Managed Service Provider offering"
             },
-            "defaultValue": "Azure Management by Allixo with full permissions (AKS, ACR, Network)"
+            "defaultValue": "Azure Management by Allixo with full permissions (AKS, ACR, Network, Key Vault)"
         },
         "managedByTenantId": {
             "type": "string",
@@ -55,7 +55,9 @@
                             "b24988ac-6180-42a0-ab88-20f7382dd24c",
                             "4d97b98b-1d4f-4787-a291-c67834d212e7",
                             "f1a07417-d97a-45cb-824c-7a7467783830",
-                            "7f951dda-4ed3-4680-a7ca-43fe172d538d"
+                            "7f951dda-4ed3-4680-a7ca-43fe172d538d",
+                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7",
+                            "4633458b-17de-408a-b874-0445c86b69e0"
                         ]
                     },
                     {
@@ -81,7 +83,9 @@
                             "b24988ac-6180-42a0-ab88-20f7382dd24c",
                             "4d97b98b-1d4f-4787-a291-c67834d212e7",
                             "f1a07417-d97a-45cb-824c-7a7467783830",
-                            "7f951dda-4ed3-4680-a7ca-43fe172d538d"
+                            "7f951dda-4ed3-4680-a7ca-43fe172d538d",
+                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7",
+                            "4633458b-17de-408a-b874-0445c86b69e0"
                         ]
                     },
                     {
@@ -107,7 +111,9 @@
                             "b24988ac-6180-42a0-ab88-20f7382dd24c",
                             "4d97b98b-1d4f-4787-a291-c67834d212e7",
                             "f1a07417-d97a-45cb-824c-7a7467783830",
-                            "7f951dda-4ed3-4680-a7ca-43fe172d538d"
+                            "7f951dda-4ed3-4680-a7ca-43fe172d538d",
+                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7",
+                            "4633458b-17de-408a-b874-0445c86b69e0"
                         ]
                     }
                 ]
@@ -145,11 +151,13 @@
                 ],
                 "delegatedRoles": [
                     "Contributor",
-                    "Network Contributor", 
+                    "Network Contributor",
                     "Managed Identity Operator",
-                    "AcrPull"
+                    "AcrPull",
+                    "Key Vault Secrets Officer",
+                    "Key Vault Secrets User"
                 ],
-                "description": "This template provides comprehensive Azure management permissions including AKS, ACR, and networking capabilities"
+                "description": "This template provides comprehensive Azure management permissions including AKS, ACR, networking, and Key Vault capabilities"
             }
         }
     }
