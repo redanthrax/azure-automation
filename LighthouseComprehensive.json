@@ -56,7 +56,8 @@
                             "4d97b98b-1d4f-4787-a291-c67834d212e7",
                             "f1a07417-d97a-45cb-824c-7a7467783830",
                             "7f951dda-4ed3-4680-a7ca-43fe172d538d",
-                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7"
+                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7",
+                            "3498e952-d568-435e-9b2c-8d77e338d7f7"
                         ]
                     },
                     {
@@ -83,7 +84,8 @@
                             "4d97b98b-1d4f-4787-a291-c67834d212e7",
                             "f1a07417-d97a-45cb-824c-7a7467783830",
                             "7f951dda-4ed3-4680-a7ca-43fe172d538d",
-                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7"
+                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7",
+                            "3498e952-d568-435e-9b2c-8d77e338d7f7"
                         ]
                     },
                     {
@@ -110,8 +112,14 @@
                             "4d97b98b-1d4f-4787-a291-c67834d212e7",
                             "f1a07417-d97a-45cb-824c-7a7467783830",
                             "7f951dda-4ed3-4680-a7ca-43fe172d538d",
-                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7"
+                            "b86a8fe4-44ce-4948-aee5-eccb2c155cd7",
+                            "3498e952-d568-435e-9b2c-8d77e338d7f7"
                         ]
+                    },
+                    {
+                        "principalId": "7aee77f3-f04f-44ce-84fd-51dcb5c03891",
+                        "roleDefinitionId": "3498e952-d568-435e-9b2c-8d77e338d7f7",
+                        "principalIdDisplayName": "ggagnon@allixo.com - AKS RBAC Cluster Admin"
                     }
                 ]
             }
